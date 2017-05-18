@@ -1,4 +1,50 @@
 import csv
+while True : 
+	inputType = input("Select your input type (csv or manual) : ")
+	if (inputType == 'csv') :
+		#GAME TO PREDICT
+		game = []
+		with open("dota2game.csv", 'r') as f:
+		    reader = csv.reader(f, delimiter=';')
+		    r = list(reader)
+		    rownum = 0
+		    for row in r :
+		        if rownum ==1 :
+		            for elem in row:
+		                game.append(elem)
+		        rownum+=1
+		break
+	elif (inputType == 'manual') : 
+		temp = 0
+		game = []
+		while temp <= 112 :
+			game.append("0")
+			temp +=1
+		i = 1
+		print("----- RADIANT -----")
+		while i <= 5:
+			hero = input ("Hero n°" +str(i) +" : ")
+			if (int(hero) >112 or int(hero) < 0):
+				print ("Your hero doesn't exists !")
+			elif (game[int(hero)] == "0") : 
+				game[int(hero)] = "1"
+				i+=1
+			
+			else :
+				print ("Chose an another hero, this one has already been picked")
+		i = 1
+		print("----- Dire -----")
+		while i <= 5:
+			hero = input ("Hero n°" +str(i) +" : ")
+			if (int(hero) >112 or int(hero) < 0):
+				print ("Your hero doesn't exists !")
+			elif (game[int(hero)] == "0") : 
+				game[int(hero)] = "-1"
+				i+=1
+			else :
+				print ("Chose an another hero, this one has already been picked")
+
+		break
 
 #HEROES LIST
 heroes = []
@@ -8,17 +54,17 @@ with open("dota2heroes.csv", 'r') as f:
     for row in r :
         heroes.append(row[0])
 
-#GAME TO PREDICT
-game = []
-with open("dota2game.csv", 'r') as f:
-    reader = csv.reader(f, delimiter=';')
-    r = list(reader)
-    rownum = 0
-    for row in r :
-        if rownum ==1 :
-            for elem in row:
-                game.append(elem)
-        rownum+=1
+# #GAME TO PREDICT
+# game = []
+# with open("dota2game.csv", 'r') as f:
+#     reader = csv.reader(f, delimiter=';')
+#     r = list(reader)
+#     rownum = 0
+#     for row in r :
+#         if rownum ==1 :
+#             for elem in row:
+#                 game.append(elem)
+#         rownum+=1
 
 #MATCH HISTORY
 game_history = []
@@ -120,3 +166,6 @@ elif prediction < 0 :
     print ('Radiant Victory '+str(int(prediction*100)/100+100)+'%')
 else :
     print ('Draw')
+
+
+print (game)
