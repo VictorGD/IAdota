@@ -21,14 +21,15 @@ with open("dota2game.csv", 'r') as f:
         rownum+=1
 
 #MATCH HISTORY
+game_history = []
 with open("dota2.csv", 'r') as f:
     reader = csv.reader(f, delimiter=';')
     r = list(reader)
-    game_history = []
     for row in r :
         game_history.append(row)
-stats_game = []
+
 # GAME SCORING
+stats_game = []
 score_max = 0
 rownum = 0
 for row in game_history :
@@ -46,19 +47,10 @@ for row in game_history :
             if row[indice_hero+1] == str(- int(hero)) :
                 row[len(row)-1]+=1
         indice_hero += 1
-    if row[len(row)-2] >= score_max :
-        score_max = row[len(row)-2]
-        stats_game.append([row[0],row[len(row)-2],rownum])
-    if row[len(row)-1] >= score_max :
-        score_max = row[len(row)-1]
-        stats_game.append([- int(row[0]),row[len(row)-1],rownum])
-        rownum +=1
-    # CLEANING STATS
-rownum =0
-for row in stats_game :
-    if row[1]<score_max & len(stats_game)>(len(game_history)/1000) :
-        del stats_game[rownum]
-    rownum+=1
+    score_max = row[len(row)-2]
+    stats_game.append([row[0],row[len(row)-2],rownum])
+    score_max = row[len(row)-1]
+    stats_game.append([- int(row[0]),row[len(row)-1],rownum])
 #PREDICTION
 victories = 0
 defeats = 0
