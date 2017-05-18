@@ -97,7 +97,7 @@ for row in stats_game :
             defeats+=2
         if row[1]==score_max-9:
             defeats+=1
-prediction = (victories-defeats)/(victories+defeats)*100
+prediction = (victories-defeats)/(victories+defeats)*50
 #PRINT PREDICTION
 radiant_team = []
 dire_team = []
@@ -114,9 +114,10 @@ for hero in radiant_team :
 print('Dire Team :')
 for hero in dire_team :
     print('  - '+str(hero))
+
 if prediction > 0 :
-    print ('Dire Victory '+str(int(prediction*100)/100)+'%')
+    print ('Radiant Victory '+str(int(prediction*100)/100+50)+'%')
 elif prediction < 0 :
-    print ('Radiant Victory '+str(int(prediction*100)/100+100)+'%')
+    print ('Dire Victory '+str(- int(prediction*100)/100+50)+'%')
 else :
     print ('Draw')
