@@ -167,6 +167,3 @@ elif prediction < 0 :
     print ('Dire Victory '+str(- int(prediction*100)/100+50)+'%')
 else :
     print ('Draw')
-
-
-print (game)
