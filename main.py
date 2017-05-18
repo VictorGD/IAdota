@@ -27,9 +27,6 @@ with open("dota2.csv", 'r') as f:
     game_history = []
     for row in r :
         game_history.append(row)
-for row in game_history:
-    print(row)
-
 stats_game = []
 # GAME SCORING
 score_max = 0
@@ -119,13 +116,13 @@ for hero in game :
     if hero == '-1' :
         dire_team.append(heroes[colnum])
     colnum+=1
-    print('Radiant Team :')
+print('Radiant Team :')
 for hero in radiant_team :
     print('  - '+str(hero))
 print('Dire Team :')
 for hero in dire_team :
     print('  - '+str(hero))
-    if prediction > 0 :
+if prediction > 0 :
     print ('Dire Victory '+str(int(prediction))+'%')
 elif prediction < 0 :
     print ('Radiant Victory '+str(int(prediction+100))+'%')
