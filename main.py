@@ -123,8 +123,8 @@ print('Dire Team :')
 for hero in dire_team :
     print('  - '+str(hero))
 if prediction > 0 :
-    print ('Dire Victory '+str(int(prediction))+'%')
+    print ('Dire Victory '+str(int(prediction*100)/100)+'%')
 elif prediction < 0 :
-    print ('Radiant Victory '+str(int(prediction+100))+'%')
+    print ('Radiant Victory '+str(int(prediction*100)/100+100)+'%')
 else :
     print ('Draw')
