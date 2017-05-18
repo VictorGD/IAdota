@@ -1,30 +1,62 @@
 import csv
+
+from tkinter import * 
+
+def inputCsv(): 
+	game = []
+	with open("dota2game.csv", 'r') as f:
+	    reader = csv.reader(f, delimiter=';')
+	    r = list(reader)
+	    rownum = 0
+	    for row in r :
+	        if rownum ==1 :
+	            for elem in row:
+	                game.append(elem)
+	        rownum+=1
+	affichacheScore()
+	return game
+
+
+def affichacheScore():
+	fenetrebis = Tk();
+
+
+fenetre = Tk()
+
+Button(fenetre, text ='inputCsv', command=inputCsv).pack(side=LEFT, padx=5, pady=5)
+Button(fenetre, text ='manual' ).pack(side=RIGHT, padx=5, pady=5)
+
+fenetre.mainloop()
+
+#HEROES LIST
+heroes = []
+with open("dota2heroes.csv", 'r') as f:
+    reader = csv.reader(f)
+    r = list(reader)
+    for row in r :
+        heroes.append(row[0])
+
+
+
+
+
 while True : 
 	inputType = input("Select your input type (csv or manual) : ")
 	if (inputType == 'csv') :
 		#GAME TO PREDICT
-		game = []
-		with open("dota2game.csv", 'r') as f:
-		    reader = csv.reader(f, delimiter=';')
-		    r = list(reader)
-		    rownum = 0
-		    for row in r :
-		        if rownum ==1 :
-		            for elem in row:
-		                game.append(elem)
-		        rownum+=1
+		game = inputCsv()
 		break
 	elif (inputType == 'manual') : 
 		temp = 0
 		game = []
-		while temp <= 112 :
+		while temp <= len(heroes) :
 			game.append("0")
 			temp +=1
 		i = 1
 		print("----- RADIANT -----")
 		while i <= 5:
 			hero = input ("Hero n°" +str(i) +" : ")
-			if (int(hero) >112 or int(hero) < 0):
+			if (int(hero) >len(heroes) or int(hero) < 0):
 				print ("Your hero doesn't exists !")
 			elif (game[int(hero)] == "0") : 
 				game[int(hero)] = "1"
@@ -36,7 +68,7 @@ while True :
 		print("----- Dire -----")
 		while i <= 5:
 			hero = input ("Hero n°" +str(i) +" : ")
-			if (int(hero) >112 or int(hero) < 0):
+			if (int(hero) >len(heroes) or int(hero) < 0):
 				print ("Your hero doesn't exists !")
 			elif (game[int(hero)] == "0") : 
 				game[int(hero)] = "-1"
@@ -45,26 +77,6 @@ while True :
 				print ("Chose an another hero, this one has already been picked")
 
 		break
-
-#HEROES LIST
-heroes = []
-with open("dota2heroes.csv", 'r') as f:
-    reader = csv.reader(f)
-    r = list(reader)
-    for row in r :
-        heroes.append(row[0])
-
-# #GAME TO PREDICT
-# game = []
-# with open("dota2game.csv", 'r') as f:
-#     reader = csv.reader(f, delimiter=';')
-#     r = list(reader)
-#     rownum = 0
-#     for row in r :
-#         if rownum ==1 :
-#             for elem in row:
-#                 game.append(elem)
-#         rownum+=1
 
 #MATCH HISTORY
 game_history = []
