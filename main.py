@@ -2,6 +2,25 @@ import csv
 
 from tkinter import * 
 
+#HEROES LIST
+heroes = []
+with open("dota2heroes.csv", 'r') as f:
+    reader = csv.reader(f)
+    r = list(reader)
+    for row in r :
+        heroes.append(row[0])
+
+
+#MATCH HISTORY
+game_history = []
+with open("dota2.csv", 'r') as f:
+    reader = csv.reader(f, delimiter=';')
+    r = list(reader)
+    for row in r :
+        game_history.append(row)
+
+
+
 def inputCsv(): 
 	game = []
 	with open("dota2game.csv", 'r') as f:
@@ -13,31 +32,134 @@ def inputCsv():
 	            for elem in row:
 	                game.append(elem)
 	        rownum+=1
-	affichacheScore()
+	affichacheScore(game)
 	return game
 
+def inputManual() :
+	for hero in heroes :
+		print ("bah")
 
-def affichacheScore():
+
+def affichacheScore(game ):
+
+	# GAME SCORING
+	stats_game = []
+	score_max = 0
+	rownum = 0
+	for row in game_history :
+	    row.append(0)
+	    row.append(0)
+	    indice_hero = 0
+	    for hero in game :
+	        if hero != '0' :
+	            if row[indice_hero+1] == hero :
+	                row[len(row)-2]+=1
+	        indice_hero += 1
+	        indice_hero =0
+	    for hero in game :
+	        if hero != '0' :
+	            if row[indice_hero+1] == str(- int(hero)) :
+	                row[len(row)-1]+=1
+	        indice_hero += 1
+	    score_max = row[len(row)-2]
+	    stats_game.append([row[0],row[len(row)-2],rownum])
+	    score_max = row[len(row)-1]
+	    stats_game.append([- int(row[0]),row[len(row)-1],rownum])
+	#PREDICTION
+	victories = 0
+	defeats = 0
+	for row in stats_game :
+	    if row[0]==1:
+	        if row[1]==score_max:
+	            victories+=512
+	        if row[1]==score_max-1:
+	            victories+=256
+	        if row[1]==score_max-2:
+	            victories+=128
+	        if row[1]==score_max-3:
+	            victories+=64
+	        if row[1]==score_max-4:
+	            victories+=32
+	        if row[1]==score_max-5:
+	            victories+=16
+	        if row[1]==score_max-6:
+	            victories+=8
+	        if row[1]==score_max-7:
+	            victories+=4
+	        if row[1]==score_max-8:
+	            victories+=2
+	        if row[1]==score_max-9:
+	            victories+=1
+	    else :
+	        if row[1]==score_max:
+	            defeats+=512
+	        if row[1]==score_max-1:
+	            defeats+=256
+	        if row[1]==score_max-2:
+	            defeats+=128
+	        if row[1]==score_max-3:
+	            defeats+=64
+	        if row[1]==score_max-4:
+	            defeats+=32
+	        if row[1]==score_max-5:
+	            defeats+=16
+	        if row[1]==score_max-6:
+	            defeats+=8
+	        if row[1]==score_max-7:
+	            defeats+=4
+	        if row[1]==score_max-8:
+	            defeats+=2
+	        if row[1]==score_max-9:
+	            defeats+=1
+	prediction = (victories-defeats)/(victories+defeats)*50
+
+	#PRINT PREDICTION
+	radiant_team = []
+	dire_team = []
+	colnum = 0
+	for hero in game :
+	    if hero == '1' :
+	        radiant_team.append(heroes[colnum])
+	    if hero == '-1' :
+	        dire_team.append(heroes[colnum])
+	    colnum+=1
+	print('Radiant Team :')
+	for hero in radiant_team :
+	    print('  - '+str(hero))
+	print('Dire Team :')
+	for hero in dire_team :
+	    print('  - '+str(hero))
+
+	if prediction > 0 :
+	    printedResult = ('Radiant Victory '+str(int(prediction*100)/100+50)+'%')
+	elif prediction < 0 :
+	    printedResult = ('Dire Victory '+str(- int(prediction*100)/100+50)+'%')
+	else :
+	    printedResult = ('Draw')
+
 	fenetrebis = Tk();
 
+	l = LabelFrame(fenetrebis, text="Radiant", padx=20, pady=20)
+	l.pack(fill="both", expand="yes",side=LEFT)
+
+	r = LabelFrame(fenetrebis, text="Dire", padx=20, pady=20)
+	r.pack(fill="both", expand="yes", side=RIGHT)
+	for hero in radiant_team :
+	    Label(l,text='%s' %(hero)).pack()
+	print('Dire Team :')
+	for hero in dire_team :
+	    Label(r,text='%s' %(hero)).pack()
+
+	result = LabelFrame(fenetrebis, text = "Predicted Result",padx=20, pady=20)
+	result.pack(fill="both", expand="yes")
+	Label(result,text=printedResult).pack()
 
 fenetre = Tk()
 
 Button(fenetre, text ='inputCsv', command=inputCsv).pack(side=LEFT, padx=5, pady=5)
-Button(fenetre, text ='manual' ).pack(side=RIGHT, padx=5, pady=5)
+Button(fenetre, text ='manual',command=inputManual ).pack(side=RIGHT, padx=5, pady=5)
 
 fenetre.mainloop()
-
-#HEROES LIST
-heroes = []
-with open("dota2heroes.csv", 'r') as f:
-    reader = csv.reader(f)
-    r = list(reader)
-    for row in r :
-        heroes.append(row[0])
-
-
-
 
 
 while True : 
@@ -78,107 +200,9 @@ while True :
 
 		break
 
-#MATCH HISTORY
-game_history = []
-with open("dota2.csv", 'r') as f:
-    reader = csv.reader(f, delimiter=';')
-    r = list(reader)
-    for row in r :
-        game_history.append(row)
-
-# GAME SCORING
-stats_game = []
-score_max = 0
-rownum = 0
-for row in game_history :
-    row.append(0)
-    row.append(0)
-    indice_hero = 0
-    for hero in game :
-        if hero != '0' :
-            if row[indice_hero+1] == hero :
-                row[len(row)-2]+=1
-        indice_hero += 1
-        indice_hero =0
-    for hero in game :
-        if hero != '0' :
-            if row[indice_hero+1] == str(- int(hero)) :
-                row[len(row)-1]+=1
-        indice_hero += 1
-    score_max = row[len(row)-2]
-    stats_game.append([row[0],row[len(row)-2],rownum])
-    score_max = row[len(row)-1]
-    stats_game.append([- int(row[0]),row[len(row)-1],rownum])
-#PREDICTION
-victories = 0
-defeats = 0
-for row in stats_game :
-    if row[0]==1:
-        if row[1]==score_max:
-            victories+=512
-        if row[1]==score_max-1:
-            victories+=256
-        if row[1]==score_max-2:
-            victories+=128
-        if row[1]==score_max-3:
-            victories+=64
-        if row[1]==score_max-4:
-            victories+=32
-        if row[1]==score_max-5:
-            victories+=16
-        if row[1]==score_max-6:
-            victories+=8
-        if row[1]==score_max-7:
-            victories+=4
-        if row[1]==score_max-8:
-            victories+=2
-        if row[1]==score_max-9:
-            victories+=1
-    else :
-        if row[1]==score_max:
-            defeats+=512
-        if row[1]==score_max-1:
-            defeats+=256
-        if row[1]==score_max-2:
-            defeats+=128
-        if row[1]==score_max-3:
-            defeats+=64
-        if row[1]==score_max-4:
-            defeats+=32
-        if row[1]==score_max-5:
-            defeats+=16
-        if row[1]==score_max-6:
-            defeats+=8
-        if row[1]==score_max-7:
-            defeats+=4
-        if row[1]==score_max-8:
-            defeats+=2
-        if row[1]==score_max-9:
-            defeats+=1
-prediction = (victories-defeats)/(victories+defeats)*50
-#PRINT PREDICTION
-radiant_team = []
-dire_team = []
-colnum = 0
-for hero in game :
-    if hero == '1' :
-        radiant_team.append(heroes[colnum])
-    if hero == '-1' :
-        dire_team.append(heroes[colnum])
-    colnum+=1
-print('Radiant Team :')
-for hero in radiant_team :
-    print('  - '+str(hero))
-print('Dire Team :')
-for hero in dire_team :
-    print('  - '+str(hero))
-
-if prediction > 0 :
-    print ('Radiant Victory '+str(int(prediction*100)/100+50)+'%')
-elif prediction < 0 :
-    print ('Dire Victory '+str(- int(prediction*100)/100+50)+'%')
-else :
-    print ('Draw')
 
 
-print (game)
+
+
+
+
